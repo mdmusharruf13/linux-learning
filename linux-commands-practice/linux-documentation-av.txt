@@ -1,0 +1,146 @@
+ls -ltr
+cd /
+cd sbin -> system binaries exists for managing system
+sbin/ useradd _username
+
+cd bin -> all commands or binaries inside bin are non-administrative
+which ls/grep/mv/cp -> any one command's location will be displayed using 'which'.
+
+User Management:
+the people who are using docker 
+{
+docker ps
+docker exec -it _num_displayed /bin/bash
+}
+
+useradd _username -> add user in the Linux.
+passwd _username -> ask for setting password for this created user
+cat /etc/passwd -> it has all user infomation.
+cat /etc/shadow -> here encrypted passwords are stored.
+userdel _username -> delete user from the linux.
+adduser _username -> this also create home dir_ and all files for user.
+su - _username -> it will switch the user from current to _username.
+rm -rf /sbin -> normal user cannot delete unless its root user.
+groupadd _groupname -> create a group with _groupname name.
+cat /etc/group -> created group listed at last.
+usermod -aG _groupname _username -> user will be added to the group.
+cat /etc/group -> group output: _groupname:x:1010:_username (similar to this you will see when you run this output).
+Note: If you change the permissions of one group then the users inside will also have the modified permission as similar to the group.
+pwd
+ssh _username@ip_address -> will ask for password, this will connect to the remote linux server.
+whoami -> provide username
+uname -a -> provide the linux instance.
+
+FILE_MANAGEMENT:
+ls -> list files and directories
+cd _dirname/_anypath -> change the current working directory
+cd .. -> go back a directory level up.
+pwd -> show present working directory.
+mkdir _dirname -> create a directory.
+rmdir _dirname -> delete directory
+touch _filename -> create a file with the name provided.
+rm _filename -> delete file.
+rm -rf _dirname -> deleting non-empty dir.
+cp _file1 _newfile2 -> create _newfile2 file with the content of _file1 file.
+mv old_name new_name -> moves or renames a file or directory.
+
+"sudo apt install vim" -> install vim editor
+modes:
+ -> normal mode for viewing
+ -> insert mode: type 'i' and start writing click 'esc' to get out of insert mode.
+ -> command mode: used of saving, quitting and search (press : in normal mode)
+ :wq! -> saving in vim editor.
+ :q! exit without saving in vim.
+
+echo "content" > _filename -> overwrite the file content with the content in double quotes.
+echo "main content" >> _filename -> this >> symbol append the content in the file.
+
+
+sudo adduser _username -> creates a new user with home directory
+su - _username -> switch to the _username user.
+
+/tmp -> if multiple user created using adduser command then '/tmp' folder will be common for them.
+
+r=read, w=write, x=execute and ' '=remove all permissions
+chmod u=rwx _filename -> applies linux file mgmt permissions(read,write,exexute) for 'u=user'.
+chmod o= _filename -> applies linux file mgmt permissions for 'o=others'.
+
+sudo -i or sudo su - -> to enter into root user.
+
+getfacl _filename -> get details of _filename.
+
+Note: there are some folder where you can just read and execute files of other users but not write bcoz it has some special protections bu the OS. You should stay away from this folders
+example folders: 
+/etc   → system configuration
+/bin   → essential programs
+/usr   → installed system software/libraries
+/boot  → bootloader/kernel files
+/proc  → kernel/process virtual filesystem
+/sys   → kernel/device information
+/dev   → device files
+
+Note: after creating directory in root you have to set directory permissinos to 777.
+
+chmod 777 _dirName -> change the permissions of a directory.
+
+chown _new_user:_new_grp _filename -> change the owner of the file.
+
+PROCESS MANAGEMENT:
+Process: It is a running instance of any prgm.
+{1.view/check process
+ 2.kill, stop and resume processes
+ 3.Prioritize, Deprioritize process} -> process Mgmt
+ 
+ps -> list running processes.
+ps aux -> list all process.
+ps aux | nl -> list all process with line numbers.
+ps aux | wc -l -> count lines.
+ps -ef -> list all processes, here CPU & Memory utilization are not displayed.
+kill _processID -> kill the process with the _processID number.
+check: ps aux | grep java | grep -v grep
+kill -9 _prssID -> forcefully kill the process.
+kill -STOP _prssID -> temporarily stop the process.
+kill -CONT _prssID -> this will resume the paused process.
+renice -n 10 -p _prssID -> setting priority to the process.(range is -19 to 20)
+systemctl list-units --type=services -> this list all the services that are running on linux.
+systemctl list-unit-files -> "dont know"
+systemctl stop _service-name ->  this will stop that system service if  running.
+systemctl start _service-name -> start system service.
+
+
+MONITORING: 
+- who are those consuming more {cpu, memory, disk and files}.
+
+top -> this will show cpu utilization and memory utilization in realtime.
+vmstat -> reports the system performance.
+free -m -> will show the free memory.
+free -h -> human readable format shows free memory.
+nproc -> no of cpu's.
+df -h -> disk info.
+du -sh -> disk utilization of particular folder.
+du -sh * -> disk utilization of each folder and files in a directory.
+
+
+DISK MANAGEMENT:
+lsblk -> list the blocks attached to storages.
+sudo fdisk -l -> list all the disk info.
+mkdir -p /mnt/demo -> creating a directory.(use sudo)
+mkfs -t ext4 /dev/xvdf(_diskname) -> to make file system of type ext4 to the disk. (this is used to add extra volumes)
+Note: check mount/umount commands.
+
+Shell Scripting:
+set -x -> debug mode, print same command before executing.
+ps -ef | grep "anyword" -> will output list of processes that consist of the word "anyword".
+awk -F" " '{print $2}' -> it will print column 2(you can change the number 2).
+
+grep _wordfromfile _filename -> it will return line from _filename.
+
+set -e -> exit the script when there is an error, and if -e is used it will check the last command in that line if the last command consist of an error it will exit if not then it will execute as last command in the line is valid.(then you have to use -o pipefail)
+
+set -o pipefail -> it will catch exit script if the line is having error along with pipe and valid command. 
+wget _link_ -> downloads from the link provided.
+curl -X GET _link_ -> make get request and get the data but does not downloads any thing like wget.
+
+find _path_ -name _filename_ -> find the file in the given path and its sub directories.
+
+trap "msg" _builtinsignal_ -> it will print msg it any operation invoke that signal.(trap "echo dont use the ctrl+c" SIGINT).

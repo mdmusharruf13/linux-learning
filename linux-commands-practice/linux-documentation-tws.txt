@@ -1,0 +1,155 @@
+Day-2 Linux Commands
+date
+ls
+mkdir devops
+ls -l -> details
+pwd
+touch filename.txt
+clear
+cd path_ -> change the working directory to the path_ directory
+cd .. -> get back to the parent directory from the current directory
+rm filename
+rm -r directory_ -> recursively removes all files inside that directory and at last delete that directory.
+rmdir -> delete empty directory.
+cat filename -> print contents of file in terminal
+echo "hello dosto" > filename_ -> replace all data with hello dosto of filename_.
+zcat -> to see content inside zip file.
+head filename -> display first 10 lines of file.
+tail filename -> display last 10 lines of file.
+less/more filename
+cp filename pathname/filename -> copy file to directory or inside file.
+mv filename pathname/filename -> renamed if filename is provided, else moved to pathname.
+ln -s _path/filename _newname -> shortcut file created for that pathfile, and without -s hard file is created even if original file is deleted this remains same without -s.
+cut -b 1-4 filename ->  it will give 4 characters of each rows.
+echo "msg" | tee filename -> it replaces existing data with msg into given filename.
+nohup _anycommand -> it stores the output of the command to nohup.out file, and when used again keep appending the output to that nohup.out file.
+vmstat -> gives info about virtual memory (-a for active memory).
+
+## User & files mgmt
+# system level commands
+uname -> tells which platform you are using.
+uptime
+date
+who -> tells which user has logged-in when
+whoami -> display current user.
+which cp/bash/mv -> it display that binary location.
+id -> it display current user information like uid, gid and groups.
+sudo -> for root permissions
+sudo shutdown -> it will shutdown the system.
+shutdown -c -> it will cancel the shutdown scheduled.
+reboot -> restart the OS.
+apt -> used to install packages from online.
+packman, yum, dnf, portage, rpm -> for different flavours of linux.
+
+## Users & group mgmt
+sudo useradd -m _name -> create a user and add it to home directory when -m is used else only create user account.
+sudo passwd username -> create password of provided username.
+sudo userdel -r _name -> delete the user account with its home direcotry if -r is specified else only delete user account.
+sudo groupadd _grpname -> create group.
+cat /etc/group -> display list of groups.
+sudo gpasswd -a _user _grp -> add user to group (-a for single and -M for multiple users).
+sudo groupdel _grpName -> delete group.
+Note: if you add users to group like gpasswd -M user1, user2 grpName then the existing user are removed because -M behaves like set the group's entire member list to exactly to these users.
+so for these you have to add one by one using: gpasswd -a user1 grpName.
+
+getent group _grpName -> list who are in group.
+groups userName -> tells in which group the user belongs.
+$(command) -> if used inside another command it will execute first and put its output in that command.
+sudo gpasswd -M $(getent group _grpName1|cut -d: -f4),user1,user2 _grpName2 -> fetch list of users from the grp1 and add to grp2.
+cut -> extracts a particular field from text.
+-d: -> use ':' as seperator.
+-f4 -> is 4th field.
+ 
+try this first:(internet)
+sudo groupadd -g 1009 _grpName -> create grp with specific grpID and grpName.
+sudo chgrp _grpName _fileName -> change the group of file.
+sudo chgrp -R _newGrp _pathToDir -> change group of directory.
+chown _newOwnerName:_newGrpName _fileName -> change group and owner of file.
+sudo groupmod -n _newGrpName _oldGrpName -> rename group.
+sudo usermod --append --group _grpName _user -> add user to grp.
+sudo usermod -aG _grpName _user -> similat to above append and group.
+sudo gpasswd --delete _user _grpName -> remove specific user from grp.
+sudo groupdel _grpName -> delete group.
+
+
+zip -r main.zip linux-lab/ -> zip(compress) the linux-lab directory as main.zip file.
+unzip main.zip -> decompress zip file.
+
+tar -cvzf backup.tar.gz _dirName -> compress directory to backup.tar.gz file.
+tar -xvzf backup.tar.gz -> extract the compressed file.
+
+check:
+scp
+rsync
+
+## Networking Commands
+
+ping google.com -> if packets are recieved then your connection to that website is good.
+>> sudo apt install net-tools
+netstat -> info about active connections and protocols of a system.
+>> sudo apt install traceroute
+traceroute youtube.com -> list the nodes of request traversal.
+tracepath youtube.com
+mtr youtube.com -> it is combination of ping & tracepath.
+nslookup website -> display site name and ipaddress.
+telnet website.com 80 -> it help to connect to a website specific port
+hostname -> display host of system.
+ip address show -> show ip info.
+iwconfig -> list wireless conn.
+ss -> similar to netstat.
+dig website -> display location of hosting.
+>> sudo apt intall whois
+whois website -> get info about website
+arp -> mac address of your connection.
+>> install ifplugstatus
+ifplugstatus -> tells interfaces are running or not.
+curl -> call api endpoints
+>> curl -X GET https://dummyjson.com/users/1 | jq (this jq for structured response)
+
+wget link -> downloads data from the internet.
+
+sudo iptables _moreCmnd
+
+watch _oneMoreCommand -> run this command every 2seconds.
+>> watch date
+watch -n time _command -> run after every t seconds.
+>> watch -n 5 date
+nmap -v _website -> display open ports of that website.
+route -> display routes(iptable is explanation of route)
+
+
+pro commands:
+awk '{print}' filename -> print content of file.
+awk '{print $1}' filename -> print first column.
+awk '{print $1,$3}' filename -> print first and third column.
+awk '/file/ {print}' filename -> print lines containing 'file' words.
+awk '/file/ {count++} END {print count}' filename -> count the occurrence of 'file' word and print it.
+awk '/file/' {cnt++} END {print "The count is ", cnt} filename -> custom print.
+awk '$2 >= "08:53" && $2 <= "08:54" {print $} filename -> print column 2 with time between 08:53 - 08:54 all lines.
+awk 'NR >=2 && NR <=10 {print NR}' filename -> print no. of row/ you can also print rows or whole line.
+NOTE: for using awk it always require formatted data like csv, tbl(TSV).
+
+sed -n '/string/p' filename -> it is used for stream data, -n for exact match and 'p' for printing lines.
+
+diff: awk vs sed
+- awk work on structured data but sed work on stream data on matter what.
+
+= in sed -> showing line number
+-i in sed -> is called in-place editing, used to modify the file.
+g in sed -> meaning global
+-e in sed -> used for expression like =.
+
+sed 's/old/new/g' filename -> used to replace string and print output in terminal, but does not modifies original file.
+sed -i 's/file/FILE/g' filename -> modifies file but o/p in terminal.
+sed -n -e '/file/=' filename -> print line number having 'file' word.
+sed -i.log 's/file/FILE/g' filename -> create backup for filename with .log extension and modifies original file.
+sed -n -e '/file/='  filename -> print line number containing 'file' word.
+sed -n -e '/file/=' -e '/file/' filename -> print line number with line.
+sed '1,10 s/file/FiLe/g' filename -> replace only first 10 lines.
+
+GREP = Global Regular Expression Pattern
+
+grep word Filename -> print lines word containing word.
+grep -i word Filename -> it print with case in-sensitive
+grep -c word Filename -> count the word occurrence.
+
